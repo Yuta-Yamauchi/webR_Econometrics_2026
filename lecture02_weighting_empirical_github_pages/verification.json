@@ -1,0 +1,82 @@
+{
+  "checked_on": "2026-10-13",
+  "reference": "lecture02_weighting_empirical, section 2",
+  "native_r": {
+    "version": "R version 4.6.1 (2026-06-24 ucrt)",
+    "command": "Rscript --vanilla tests/model_tests.R",
+    "result": "passed",
+    "checks": [
+      "reference coefficients and probabilities",
+      "population loss minimization",
+      "prefix OLS agrees with lm",
+      "seed reproducibility",
+      "linear conditional mean",
+      "uniform X distribution",
+      "same X distribution gives the same population projection",
+      "population coefficients invariant to n and sigma",
+      "density normalization and population orthogonality",
+      "Monte Carlo output and reproducibility",
+      "invalid n rejected"
+    ]
+  },
+  "javascript_syntax": {
+    "app.js": "passed node --check",
+    "serve.mjs": "passed node --check"
+  },
+  "browser": {
+    "environment": "Codex in-app Chromium browser, localhost HTTP",
+    "webr_url": "https://webr.r-wasm.org/v0.6.0/webr.mjs",
+    "channel": "PostMessage",
+    "initialization": "passed",
+    "default_population_display": {
+      "intercept_a": "63.0621",
+      "intercept_b": "69.7180",
+      "slope_a": "3.6656",
+      "slope_b": "2.3344",
+      "probability_a_percent": "11.75",
+      "probability_b_percent": "66.56"
+    },
+    "default_sample_display": {
+      "seed": 20261013,
+      "n_per_group": 300,
+      "slope_a": "3.2950",
+      "slope_b": "2.5446"
+    },
+    "default_monte_carlo": {
+      "repetitions_per_group": 500,
+      "mean_slope_a": "3.6670",
+      "mean_slope_b": "2.3329",
+      "sd_slope_a": "0.1527",
+      "sd_slope_b": "0.1518"
+    },
+    "linear_mean_zero_noise": "population and sample intercepts 60, slopes 3; Monte Carlo SDs 0",
+    "uniform_distribution": "population intercepts 65, slopes 3, P(6 <= X <= 10) = 0.4",
+    "five_observations": "sample slopes 6.6828 and 1.5917; population slopes unchanged",
+    "animation": "observations accumulate and OLS coefficients update",
+    "line_visibility": "unchecking OLS removes its paths",
+    "invalid_input": "n = 2 shows validation error and disables result actions",
+    "maximum_settings": {
+      "n_per_group": 2000,
+      "sigma": 15,
+      "seed": 1000000000,
+      "repetitions_per_group": 2000,
+      "status": "passed",
+      "observed_elapsed_seconds": 1.9
+    },
+    "resampling": "seed increments by 2; sample changes; population unchanged",
+    "reset": "default settings and sample reproduced",
+    "desktop_layout": "visually checked; no horizontal overflow at observed width 1265px",
+    "fixed_scatter_axes": {
+      "x_limits": [0, 10],
+      "y_limits": [45, 105],
+      "basis": "conditional-mean range plus half its width on each side, rounded outward to multiples of 5",
+      "browser_check": "mean-curve SVG coordinates and axis ticks unchanged after changing mu_a to 10, distribution B to uniform, n to 2000, sigma to 15, and seed to 42",
+      "both_panels_use_same_coordinates": true,
+      "all_2000_observations_retained": true,
+      "result": "passed"
+    },
+    "responsive_layout": "responsive CSS included; narrow viewport not separately tested",
+    "downloads": "CSV download permission was declined in the in-app browser. File-save completion was not verified. No further download attempt was made.",
+    "github_pages_deployment": "not performed; delivery is local static files and ZIP"
+  }
+}
