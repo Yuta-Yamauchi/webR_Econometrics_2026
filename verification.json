@@ -67,8 +67,14 @@
     "reset": "default settings and sample reproduced",
     "desktop_layout": "visually checked; no horizontal overflow at observed width 1265px",
     "fixed_scatter_axes": {
-      "x_limits": [0, 10],
-      "y_limits": [45, 105],
+      "x_limits": [
+        0,
+        10
+      ],
+      "y_limits": [
+        45,
+        105
+      ],
       "basis": "conditional-mean range plus half its width on each side, rounded outward to multiples of 5",
       "browser_check": "mean-curve SVG coordinates and axis ticks unchanged after changing mu_a to 10, distribution B to uniform, n to 2000, sigma to 15, and seed to 42",
       "both_panels_use_same_coordinates": true,
@@ -76,7 +82,22 @@
       "result": "passed"
     },
     "responsive_layout": "responsive CSS included; narrow viewport not separately tested",
-    "downloads": "CSV download permission was declined in the in-app browser. File-save completion was not verified. No further download attempt was made.",
-    "github_pages_deployment": "not performed; delivery is local static files and ZIP"
+    "downloads": "R code file-save completion has not been verified.",
+    "csv_download": "removed from the interface, JavaScript handlers, and operation guide",
+    "github_pages_deployment": "not performed; delivery is local static files and ZIP",
+    "presentation_revision": {
+      "font_family": "BIZ UDGothic",
+      "browser_computed_font": "BIZ UDGothic is first for body, heading, slope values, and SVG text; document.fonts.check returned true",
+      "weighted_approximation_section": "removed; repeated sampling is section 02",
+      "readme": "student operation guide; publication and local-server instructions removed",
+      "browser_checks": [
+        "WebR initialization passed",
+        "Uniform A distribution updates population slope to 3.0000",
+        "Reset restores population slope to 3.6656",
+        "500-repetition experiment matches recorded default results",
+        "No visible application errors or browser console errors",
+        "No horizontal page overflow; model formula fits its panel"
+      ]
+    }
   }
 }

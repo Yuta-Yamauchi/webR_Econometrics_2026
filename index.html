@@ -6,6 +6,9 @@
   <meta name="description" content="補習時間の分布を変え，母集団の線形射影と標本OLSをWebRで比較するシミュレーション。">
   <title>Xの分布と線形射影 | 第2回講義</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231c4054'/%3E%3Cpath d='M12 47L51 17M12 35Q31 10 51 12' stroke='%23f6f3eb' fill='none' stroke-width='4'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&amp;display=swap">
   <link rel="stylesheet" href="./style.css">
   <script type="module" src="./app.js"></script>
 </head>
@@ -71,17 +74,8 @@
           <p class="caption">各点は1人の仮想観測です。破線のOLSは選択した観測数で推定します。母集団の線形射影は，指定した分布から数値積分で求めます。横軸は0〜10時間，縦軸は条件付き期待値の範囲を基準に固定します。縦軸の表示範囲外の観測もOLSに含めます。</p>
           <div class="table-wrap"><table><caption>直線の係数と補習時間の平均</caption><thead><tr><th scope="col">比較する量</th><th scope="col" class="a-text">分布 A</th><th scope="col" class="b-text">分布 B</th></tr></thead><tbody id="coefficient-table"><tr><th scope="row">母集団の切片 β₀</th><td>—</td><td>—</td></tr></tbody></table></div>
         </section>
-        <section class="section loss-section" aria-labelledby="loss-heading">
-          <div class="section-heading"><div><p class="eyebrow">02 / WEIGHTED APPROXIMATION</p><h2 id="loss-heading">どの範囲のずれを重く評価するか</h2></div></div>
-          <p>線形射影は，平均曲線と直線のずれの二乗を，<i>X</i> の密度で重みづけした積分が最小になる直線です。</p>
-          <div class="equation">L<sub>f</sub>(a, b) = ∫<sub>0</sub><sup>10</sup> {m(x) − a − bx}² f(x) dx</div>
-          <div class="plots-pair error-plots"><div><h3 class="a-text">A の直線を，A の分布で評価</h3><div id="loss-a" class="chart error-chart"></div></div><div><h3 class="b-text">B の直線を，B の分布で評価</h3><div id="loss-b" class="chart error-chart"></div></div></div>
-          <p class="caption">図は {m(x) − β₀ − β₁x}² f(x) です。塗りつぶし全体の面積が L<sub>f</sub> になります。</p>
-          <div class="table-wrap"><table><caption>同じ分布で，2本の直線の近似誤差を比べる</caption><thead><tr><th scope="col">評価に使う分布</th><th scope="col">A の母集団の直線</th><th scope="col">B の母集団の直線</th></tr></thead><tbody id="loss-table"><tr><th scope="row">分布 A</th><td>—</td><td>—</td></tr><tr><th scope="row">分布 B</th><td>—</td><td>—</td></tr></tbody></table></div>
-          <p class="caption">各行で，自分の分布に対応する直線が L<sub>f</sub> を最小にします。得点 <i>Y</i> の予測の二乗損失は σ² + L<sub>f</sub> です。</p>
-        </section>
         <section class="section" aria-labelledby="repeated-heading">
-          <div class="section-heading"><div><p class="eyebrow">03 / REPEATED SAMPLING</p><h2 id="repeated-heading">標本を取り直すと，傾きはどう動くか</h2></div></div>
+          <div class="section-heading"><div><p class="eyebrow">02 / REPEATED SAMPLING</p><h2 id="repeated-heading">標本を取り直すと，傾きはどう動くか</h2></div></div>
           <p>現在の分布と標本サイズで，観測の生成とOLSの推定を繰り返します。1回の推定から得られる傾き1つを，ヒストグラムに集計します。</p>
           <div class="repeat-toolbar"><label for="repetitions">繰り返し回数</label><select id="repetitions"><option value="200">200回</option><option value="500" selected>500回</option><option value="1000">1,000回</option><option value="2000">2,000回</option></select><button id="run-repeat" class="primary" disabled>繰り返し実験を実行</button><span id="repeat-status" role="status"></span></div>
           <div id="repeat-result" hidden><div class="plots-pair"><div><h3 class="a-text">分布 A からの標本</h3><div id="hist-a" class="chart histogram"></div></div><div><h3 class="b-text">分布 B からの標本</h3><div id="hist-b" class="chart histogram"></div></div></div><p class="caption">縦線は各分布の母集団の傾きです。横軸と度数の目盛りは左右共通です。</p><div class="table-wrap"><table><caption>繰り返し実験の結果</caption><thead><tr><th scope="col">比較する量</th><th scope="col">分布 A</th><th scope="col">分布 B</th></tr></thead><tbody id="repeat-table"></tbody></table></div></div>
@@ -90,12 +84,12 @@
         <section class="section method-section" aria-labelledby="method-heading">
           <h2 id="method-heading">計算とデータ</h2>
           <details><summary>モデルと計算方法を見る</summary><div class="detail-body"><p>各集団では <i>X</i> を指定した分布から独立に抽出し，<i>X</i> と独立な誤差 <i>U</i> ∼ N(0, σ²) を加えて <i>Y</i> = m(<i>X</i>) + <i>U</i> を生成します。得点は連続値として扱います。平均曲線と誤差分布は両集団に共通です。</p><p>母集団の係数は β₁ = Cov(<i>X</i>, m(<i>X</i>)) / Var(<i>X</i>)，β₀ = E[m(<i>X</i>)] − β₁E[<i>X</i>] から求めます。期待値はRの <code>integrate()</code> で計算し，標本OLSは <code>lm()</code> で求めます。順次表示では，同じ標本の先頭から表示中の観測までを使ってOLSを更新します。</p><p>分布Aには指定シード，Bには指定シード＋1を使います。繰り返し実験には，それぞれ指定シード＋100，＋101を使います。設定変更後に同じシードで再計算すると，各集団で同じ基礎乱数を使います。</p><p>初期設定は <cite>lecture02_weighting_empirical</cite> 第2節に対応します。初期設定の母集団の傾きは A が約3.6656，B が約2.3344です。直線の平均関数 m(x) = 60 + 3x を選ぶと，どちらの分布でも母集団の傾きは3になります。</p></div></details>
-          <div class="download-row"><button id="download-csv" class="secondary" disabled>表示中の標本をCSVで保存</button><button id="download-r" class="secondary" disabled>現在の設定のRコードを保存</button><a href="./model.R" download>計算本体 model.R</a></div>
+          <div class="download-row"><button id="download-r" class="secondary" disabled>現在の設定のRコードを保存</button><a href="./model.R" download>計算本体 model.R</a></div>
           <p class="caption">Rコードには表示中の観測数と繰り返し回数も記録します。計算には <a href="https://docs.r-wasm.org/webr/latest/" target="_blank" rel="noreferrer">WebR</a> 0.6.0を使います。読み込みにはインターネット接続が必要です。</p>
         </section>
       </div>
     </div>
   </main>
-  <footer><span>第2回講義 · 割付確率による近似誤差の重みづけ</span><a href="./README.md">公開方法・ファイルの説明</a></footer>
+  <footer><span>第2回講義 · 割付確率による近似誤差の重みづけ</span><a href="./README.md">操作説明</a></footer>
 </body>
 </html>
