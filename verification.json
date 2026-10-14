@@ -86,8 +86,8 @@
     "csv_download": "removed from the interface, JavaScript handlers, and operation guide",
     "github_pages_deployment": "not performed; delivery is local static files and ZIP",
     "presentation_revision": {
-      "font_family": "BIZ UDGothic",
-      "browser_computed_font": "BIZ UDGothic is first for body, heading, slope values, and SVG text; document.fonts.check returned true",
+      "font_family": "BIZ UDGothic for Japanese; TeX Gyre Heros for numerals; MLModern for math",
+      "browser_computed_font": "Japanese text retains BIZ UDGothic; numeral fields and SVG ticks use TeX Gyre Heros; math uses the bundled Lecture MLModern web faces",
       "weighted_approximation_section": "removed; repeated sampling is section 02",
       "readme": "student operation guide; publication and local-server instructions removed",
       "browser_checks": [
@@ -98,6 +98,18 @@
         "No visible application errors or browser console errors",
         "No horizontal page overflow; model formula fits its panel"
       ]
+    },
+    "slide_fonts": {
+      "reference": "output/pdf/lecture02_blackwell_revised_20261012/lecture02.tex and lecture02.pdf",
+      "reference_verified": "Font declarations and embedded PDF font names checked",
+      "numerals": "TeX Gyre Heros 2.004, unmodified regular and bold OpenType files",
+      "math": "MLModern 1.2 Roman 12 / Math Italic 12 / Math Symbols 10 glyphs converted to Unicode WOFF2",
+      "conversion_check": "Every converted CFF advance width equals its OpenType horizontal metric",
+      "browser_font_loading": "Regular/italic math and numeral font checks passed; no console errors",
+      "dynamic_rendering": "Linear/curved mean, uniform distribution, reset, coefficient table, and 500-repetition histogram checked",
+      "calculation_check": "Default population slopes 3.6656 and 2.3344; repeated-sampling mean slopes 3.6670 and 2.3329",
+      "layout": "Formula fits its panel; no horizontal page overflow",
+      "bundled": "Font files, licenses, original Type 1 sources, and conversion script"
     }
   }
 }

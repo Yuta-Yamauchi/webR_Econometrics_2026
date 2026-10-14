@@ -1,0 +1,8 @@
+/* Slide fonts and licenses: FONT-NOTICES.txt in this directory. */
+@font-face{font-family:"TeX Gyre Heros";src:url("./texgyreheros-regular.otf") format("opentype");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"TeX Gyre Heros";src:url("./texgyreheros-bold.otf") format("opentype");font-weight:700;font-style:normal;font-display:swap}
+/* Apply the slide's numerals to mixed Japanese text without changing its letters. */
+@font-face{font-family:"Slide Numerals";src:url("./texgyreheros-regular.otf") format("opentype");font-weight:400;font-style:normal;font-display:swap;unicode-range:U+0025,U+002B-003A,U+2212}
+@font-face{font-family:"Slide Numerals";src:url("./texgyreheros-bold.otf") format("opentype");font-weight:700;font-style:normal;font-display:swap;unicode-range:U+0025,U+002B-003A,U+2212}
+@font-face{font-family:"Lecture MLModern";src:url("./lecture-mlmodern-regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Lecture MLModern";src:url("./lecture-mlmodern-italic.woff2") format("woff2");font-weight:400;font-style:italic;font-display:swap}

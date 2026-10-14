@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 const root = fileURLToPath(new URL('.', import.meta.url));
 const port = Number(process.argv[2] || 8766);
 if (!Number.isInteger(port) || port < 1024 || port > 65535) throw Error('Port must be an integer between 1024 and 65535.');
-const mime = { '.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.mjs':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.R':'text/plain; charset=utf-8', '.md':'text/plain; charset=utf-8', '.json':'application/json; charset=utf-8', '.svg':'image/svg+xml' };
+const mime = { '.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.mjs':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.R':'text/plain; charset=utf-8', '.md':'text/plain; charset=utf-8', '.json':'application/json; charset=utf-8', '.svg':'image/svg+xml', '.otf':'font/otf', '.woff2':'font/woff2' };
 const server = http.createServer(async (req,res)=>{
   try {
     const path = decodeURIComponent(new URL(req.url,'http://localhost').pathname);

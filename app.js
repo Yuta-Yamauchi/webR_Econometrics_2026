@@ -9,6 +9,7 @@ let shown = 300, playing = false, animationFrame = 0, animationStart = 0, animat
 const fmt = (x, digits = 4) => Number.isFinite(x) ? x.toFixed(digits) : '—';
 const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const asArray = value => Array.isArray(value) ? value : [value];
+const axisLabel = text => esc(text).replace(/\b[XY]\b/g, '<tspan class="math">$&</tspan>').replace(/b₁/g, '<tspan class="math">b</tspan><tspan class="math" style="font-style:normal;font-size:8px" baseline-shift="sub">1</tspan>');
 
 function decodeR(r) {
   if (r.type === 'list') return Object.fromEntries(r.names.map((name, i) => [name, decodeR(r.values[i])]));
@@ -158,7 +159,7 @@ function plotFrame(id, height, xlim, ylim, xLabel, yLabel, description, draw, cu
   const yTicks = ticks(...ylim, height < 200 ? 3 : 5);
   const xTicks = customTicks || ticks(...xlim, 5);
   const grid = yTicks.map(v => `<line class="grid" x1="${margin.l}" y1="${y(v)}" x2="${width-margin.r}" y2="${y(v)}"/><text class="tick" x="${margin.l-9}" y="${y(v)+4}" text-anchor="end">${tickText(v)}</text>`).join('');
-  const axes = `<line class="axis" x1="${margin.l}" y1="${height-margin.b}" x2="${width-margin.r}" y2="${height-margin.b}"/>${xTicks.map(v => `<text class="tick" x="${x(v)}" y="${height-margin.b+18}" text-anchor="middle">${tickText(v)}</text>`).join('')}<text class="axis-label" x="${margin.l}" y="14">${esc(yLabel)}</text><text class="axis-label" x="${margin.l+pw/2}" y="${height-7}" text-anchor="middle">${esc(xLabel)}</text>`;
+  const axes = `<line class="axis" x1="${margin.l}" y1="${height-margin.b}" x2="${width-margin.r}" y2="${height-margin.b}"/>${xTicks.map(v => `<text class="tick" x="${x(v)}" y="${height-margin.b+18}" text-anchor="middle">${tickText(v)}</text>`).join('')}<text class="axis-label" x="${margin.l}" y="14">${axisLabel(yLabel)}</text><text class="axis-label" x="${margin.l+pw/2}" y="${height-7}" text-anchor="middle">${axisLabel(xLabel)}</text>`;
   const clipId = `clip-${id}`;
   $(id).innerHTML = `<svg class="plot-svg" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="title-${id} desc-${id}" xmlns="http://www.w3.org/2000/svg"><title id="title-${id}">${esc(description)}</title><desc id="desc-${id}">${esc(yLabel)}。横軸：${esc(xLabel)}。</desc><defs><clipPath id="${clipId}"><rect x="${margin.l}" y="${margin.t}" width="${pw}" height="${ph}"/></clipPath></defs>${grid}<g clip-path="url(#${clipId})">${draw({x,y,xlim,ylim,margin,width,height})}</g>${axes}</svg>`;
 }
@@ -191,15 +192,15 @@ function renderSample() {
 function row(label, a, b, digits = 4) { return `<tr><th scope="row">${label}</th><td>${fmt(a,digits)}</td><td>${fmt(b,digits)}</td></tr>`; }
 function renderCoefficientTable() {
   const a = current.a.population, b = current.b.population, ca = coef('a'), cb = coef('b');
-  $('coefficient-table').innerHTML = row('母集団の切片 β₀',a.intercept,b.intercept) + row('母集団の傾き β₁',a.slope,b.slope) + row(`標本OLSの切片 b₀（${shown}人）`,ca.intercept,cb.intercept) + row(`標本OLSの傾き b₁（${shown}人）`,ca.slope,cb.slope) + row('母集団の平均補習時間 E[X]',a.mean_x,b.mean_x);
+  $('coefficient-table').innerHTML = row('母集団の切片 <span class="math">β<sub>0</sub></span>',a.intercept,b.intercept) + row('母集団の傾き <span class="math">β<sub>1</sub></span>',a.slope,b.slope) + row(`標本OLSの切片 <span class="math"><i>b</i><sub>0</sub></span>（${shown}人）`,ca.intercept,cb.intercept) + row(`標本OLSの傾き <span class="math"><i>b</i><sub>1</sub></span>（${shown}人）`,ca.slope,cb.slope) + row('母集団の平均補習時間 <span class="math">E[<i>X</i>]</span>',a.mean_x,b.mean_x);
 }
 function renderAll() {
-  $('model-equation').textContent = current.shape === 'curve' ? 'm(x) = 60 + 6x − 0.3x²' : 'm(x) = 60 + 3x';
+  $('model-equation').innerHTML = current.shape === 'curve' ? '<i>m</i>(<i>x</i>) = 60 + 6<i>x</i> − 0.3<i>x</i><sup>2</sup>' : '<i>m</i>(<i>x</i>) = 60 + 3<i>x</i>';
   renderSample();
   const densityMax = Math.max(...current.a.density,...current.b.density)*1.14;
   for (const g of ['a','b']) {
     const d = current[g], color = colors[g], p = d.population;
-    $(`description-${g}`).textContent = currentSettings[`kind_${g}`] === 'uniform' ? '0〜10時間の一様分布' : `μ = ${fmt(currentSettings[`mu_${g}`],1)}，s = ${fmt(currentSettings[`sd_${g}`],1)}`;
+    $(`description-${g}`).innerHTML = currentSettings[`kind_${g}`] === 'uniform' ? '0〜10時間の一様分布' : `<span class="math">μ = ${fmt(currentSettings[`mu_${g}`],1)}</span>，<span class="math"><i>s</i> = ${fmt(currentSettings[`sd_${g}`],1)}</span>`;
     $(`pop-slope-${g}`).textContent = fmt(p.slope);
     $(`probability-${g}`).textContent = `6〜10時間：${fmt(100*p.probability,2)}%`;
     plotFrame(`density-${g}`, 160, [0,10], [0,densityMax], '補習時間 X（時間）', '密度', `分布${g.toUpperCase()}の密度。6〜10時間の確率は${fmt(100*p.probability,2)}%。`, ({x,y}) => {
@@ -245,7 +246,7 @@ function renderRepeated() {
     const truth = repeated[`population_${g}`], color = colors[g];
     plotFrame(`hist-${g}`,250,[lo,hi],[0,yMax],'標本OLSの傾き b₁','度数',`分布${g.toUpperCase()}，${repeated.repetitions}回の標本OLSの傾き。母集団の傾きは${fmt(truth)}。`,({x,y}) => h.bins.map((v,i)=>`<rect x="${x(lo+i*h.binWidth)+.5}" y="${y(v)}" width="${Math.max(0,x(lo+h.binWidth)-x(lo)-1)}" height="${y(0)-y(v)}" fill="${color}" fill-opacity=".5"/>`).join('') + `<line x1="${x(truth)}" x2="${x(truth)}" y1="${y(0)}" y2="${y(yMax)}" stroke="${color}" stroke-width="2.5"/>`);
   }
-  $('repeat-table').innerHTML = row('母集団の傾き β₁',repeated.population_a,repeated.population_b) + row('標本OLSの傾きの平均',repeated.mean_a,repeated.mean_b) + row('標本OLSの傾きの標準偏差',repeated.sd_a,repeated.sd_b);
+  $('repeat-table').innerHTML = row('母集団の傾き <span class="math">β<sub>1</sub></span>',repeated.population_a,repeated.population_b) + row('標本OLSの傾きの平均',repeated.mean_a,repeated.mean_b) + row('標本OLSの傾きの標準偏差',repeated.sd_a,repeated.sd_b);
   $('repeat-result').hidden = false;
   $('repeat-empty').hidden = true;
 }
