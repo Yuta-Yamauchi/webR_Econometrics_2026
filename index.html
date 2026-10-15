@@ -9,9 +9,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDGothic:wght@400;700&amp;display=swap">
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./style.css?v=20261015-2">
   <link rel="stylesheet" href="./fonts/fonts.css">
-  <script type="module" src="./app.js"></script>
+  <script type="module" src="./app.js?v=20261015-2"></script>
 </head>
 <body>
   <a class="skip" href="#experiment">シミュレーションへ</a>
@@ -71,7 +71,7 @@
       <div class="results">
         <section class="section" aria-labelledby="scatter-heading">
           <div class="section-heading"><div><p class="eyebrow">01 / DISTRIBUTION & SAMPLE</p><h2 id="scatter-heading">分布と散布図を比べる</h2></div><p id="run-status" role="status">初回の読み込みには時間がかかります。</p></div>
-          <div class="mobile-group-switch" role="group" aria-label="表示する分布">
+          <div class="mobile-group-switch" role="group" aria-label="表示する分布" hidden>
             <button type="button" data-view-group="a" aria-pressed="true">分布 A</button><button type="button" data-view-group="b" aria-pressed="false">分布 B</button>
           </div>
           <div id="mobile-settings-slot" class="mobile-settings-slot"></div>
@@ -90,7 +90,7 @@
           <p>現在の分布と標本サイズで，観測の生成とOLSの推定を繰り返します。1回の推定から得られる傾き1つを，ヒストグラムに集計します。</p>
           <div class="repeat-toolbar"><label for="repetitions">繰り返し回数</label><select id="repetitions"><option value="200">200回</option><option value="500" selected>500回</option><option value="1000">1,000回</option><option value="2000">2,000回</option></select><button id="run-repeat" class="primary" disabled>繰り返し実験を実行</button><span id="repeat-status" role="status"></span></div>
           <div id="repeat-result" hidden>
-            <div class="mobile-group-switch" role="group" aria-label="ヒストグラムを表示する分布">
+            <div class="mobile-group-switch" role="group" aria-label="ヒストグラムを表示する分布" hidden>
               <button type="button" data-view-group="a" aria-pressed="true">分布 A</button><button type="button" data-view-group="b" aria-pressed="false">分布 B</button>
             </div>
             <div class="plots-pair"><div class="repeat-plot group-a"><h3 class="a-text">分布 A からの標本</h3><div id="hist-a" class="chart histogram"></div></div><div class="repeat-plot group-b"><h3 class="b-text">分布 B からの標本</h3><div id="hist-b" class="chart histogram"></div></div></div><p class="caption">縦線は各分布の母集団の傾きです。横軸と度数の目盛りは両分布で共通です。</p><div class="table-wrap"><table><caption>繰り返し実験の結果</caption><thead><tr><th scope="col">比較する量</th><th scope="col">分布 A</th><th scope="col">分布 B</th></tr></thead><tbody id="repeat-table"></tbody></table></div></div>

@@ -44,6 +44,9 @@ function setupResponsiveLayout() {
   const actions = $('sample-actions');
   const arrange = () => {
     const focused = document.activeElement;
+    for (const switcher of document.querySelectorAll('.mobile-group-switch')) {
+      switcher.hidden = !mobile.matches;
+    }
     if (mobile.matches) {
       $('mobile-settings-slot').append(controls);
       $('mobile-secondary-settings').append(shared, actions);
