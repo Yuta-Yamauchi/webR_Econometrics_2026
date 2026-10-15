@@ -13,3 +13,47 @@
 .controls output,input[type=number],.slope-summary strong,table td,.sample-playback output,.plot-svg .tick{font-family:var(--numbers);font-variant-numeric:tabular-nums}
 #shape{font-family:var(--math)}
 .plot-svg .math{font-family:var(--math);font-style:italic}
+
+.shared-settings{grid-column:1/-1;border:0;font-size:inherit}
+.shared-settings>summary{display:none}
+.sample-actions{grid-column:1/-1}
+.mobile-group-switch,.mobile-settings-slot,.mobile-secondary-settings{display:none}
+@media(max-width:800px){
+  .mobile-group-switch{display:flex;gap:4px;padding:4px;margin-bottom:12px;border:1px solid var(--line);border-radius:7px;background:#e9eee9}
+  .mobile-group-switch button{flex:1;min-height:44px;border:0;border-radius:4px;background:transparent;font-size:13px;font-weight:700;color:var(--muted)}
+  .mobile-group-switch [data-view-group="a"][aria-pressed="true"]{background:var(--a);color:white}
+  .mobile-group-switch [data-view-group="b"][aria-pressed="true"]{background:var(--b);color:white}
+  .mobile-settings-slot{display:block;margin-bottom:12px}
+  #simulation-controls{padding:12px 14px;border-top:2px solid var(--a);border-radius:5px}
+  #settings{display:block}
+  #settings>.control-help{margin:5px 0 9px}
+  #settings>.distribution-note{margin:7px 0 0}
+  #simulation-controls .distribution-control legend{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+  .distribution-kind{display:grid;grid-template-columns:80px minmax(0,1fr);gap:8px;align-items:center}
+  .controls .distribution-kind label{margin:0}
+  .controls select,.controls input[type=number]{font-size:16px;min-height:42px}
+  .normal-params{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:16px}
+  .normal-params label{grid-row:1;min-width:0}
+  .normal-params input{grid-row:2}
+  .controls .normal-params label{font-size:11px;margin:10px 0 3px}
+  .controls .normal-params output{font-size:15px}
+  .controls input[type=range]{height:26px;margin:2px 0}
+  .presets{margin:7px 0 0}
+  .presets button{min-height:34px;font-size:11px}
+  .plots-pair{grid-template-columns:1fr}
+  [data-mobile-group="a"] :is(.distribution-control,.plot-card,.repeat-plot).group-b,
+  [data-mobile-group="b"] :is(.distribution-control,.plot-card,.repeat-plot).group-a{display:none}
+  [data-mobile-group="b"] #simulation-controls{border-top-color:var(--b)}
+  [data-mobile-group="b"] .key.population{border-top-color:var(--b)}
+  .mobile-secondary-settings{display:block;margin-top:12px;padding:0 14px 12px;border:1px solid var(--line);border-radius:5px}
+  .mobile-secondary-settings:empty{display:none}
+  .shared-settings>summary{display:list-item;padding:12px 0;font-size:12px;font-weight:700;min-height:44px}
+  .shared-settings .shared-control{padding:0 0 12px!important;border-top:0!important}
+  .shared-settings legend{display:none}
+  .shared-settings[open]{border-bottom:1px solid var(--line)}
+  .mobile-secondary-settings #resample{margin-top:6px;min-height:44px}
+  .mobile-secondary-settings .control-help{margin:8px 0 0}
+}
+@media(max-width:360px){
+  .controls .normal-params output{float:none;display:block;text-align:right;margin-top:3px}
+}

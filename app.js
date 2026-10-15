@@ -31,6 +31,35 @@ function syncControls() {
     $(`sd-${g}`).disabled = uniform;
   }
 }
+function selectMobileGroup(group) {
+  $('experiment').dataset.mobileGroup = group;
+  for (const button of document.querySelectorAll('[data-view-group]')) {
+    button.setAttribute('aria-pressed', String(button.dataset.viewGroup === group));
+  }
+}
+function setupResponsiveLayout() {
+  const mobile = matchMedia('(max-width: 800px)');
+  const controls = $('simulation-controls');
+  const shared = $('shared-settings');
+  const actions = $('sample-actions');
+  const arrange = () => {
+    const focused = document.activeElement;
+    if (mobile.matches) {
+      $('mobile-settings-slot').append(controls);
+      $('mobile-secondary-settings').append(shared, actions);
+    } else {
+      $('settings').append(shared, actions);
+      $('experiment').prepend(controls);
+    }
+    shared.open = !mobile.matches;
+    if (focused instanceof HTMLElement && focused !== document.body) focused.focus({ preventScroll: true });
+  };
+  for (const button of document.querySelectorAll('[data-view-group]')) {
+    button.addEventListener('click', () => selectMobileGroup(button.dataset.viewGroup));
+  }
+  mobile.addEventListener('change', arrange);
+  arrange();
+}
 function settings() {
   if (!$('settings').checkValidity()) throw Error('標本サイズは20〜2,000の整数，乱数シードは1〜1,000,000,000の整数で入力してください。');
   const out = {};
@@ -295,5 +324,6 @@ $('repetitions').addEventListener('change',()=>{ if (repeated) $('repeat-status'
 $('download-r').addEventListener('click',downloadR);
 $('retry').addEventListener('click',initialise);
 document.addEventListener('visibilitychange',()=>{ if (document.hidden) stopAnimation(); });
+setupResponsiveLayout();
 syncControls();
 void initialise();

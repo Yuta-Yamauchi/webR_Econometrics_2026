@@ -16,7 +16,7 @@
 <body>
   <a class="skip" href="#experiment">シミュレーションへ</a>
   <header class="masthead">
-    <a class="brand" href="./"><span class="brand-mark">02</span> 計量経済学 <span class="brand-divider">/</span> シミュレーション実験</a>
+    <a class="brand" href="./"><span class="brand-mark">02</span> 計量経済学 <span class="brand-divider">/</span> 実験ノート</a>
     <div class="runtime"><span id="status-dot" class="status-dot"></span><span id="runtime-status" role="status">WebRを読み込んでいます</span><button id="retry" class="text-button" hidden>再読込</button></div>
   </header>
   <main>
@@ -29,14 +29,14 @@
     </section>
     <noscript><p class="error-box">このシミュレーションにはJavaScriptが必要です。ブラウザでJavaScriptを有効にしてください。</p></noscript>
     <div id="error" role="alert" class="error-box" hidden></div>
-    <div class="lab-layout" id="experiment">
-      <aside class="controls">
+    <div class="lab-layout" id="experiment" data-mobile-group="a">
+      <aside class="controls" id="simulation-controls" aria-labelledby="settings-heading">
         <form id="settings">
-          <div class="control-heading"><h2>実験の設定</h2><button type="button" id="reset" class="text-button">初期値に戻す</button></div>
+          <div class="control-heading"><h2 id="settings-heading">実験の設定</h2><button type="button" id="reset" class="text-button">初期値に戻す</button></div>
           <p class="control-help">設定を変えると図を更新します。</p>
           <fieldset class="distribution-control group-a">
             <legend><span class="group-dot">A</span> 分布 A</legend>
-            <label for="kind-a">分布の形</label><select id="kind-a"><option value="normal">切断正規分布</option><option value="uniform">一様分布</option></select>
+            <div class="distribution-kind"><label for="kind-a">分布の形</label><select id="kind-a"><option value="normal">切断正規分布</option><option value="uniform">一様分布</option></select></div>
             <div class="normal-params" id="normal-a">
               <label for="mu-a">切断前の平均 <span class="math">μ</span> <output id="mu-a-value">2.0</output></label><input id="mu-a" type="range" min="0" max="10" step="0.1" value="2">
               <label for="sd-a">切断前の標準偏差 <i>s</i> <output id="sd-a-value">3.0</output></label><input id="sd-a" type="range" min="0.5" max="6" step="0.1" value="3">
@@ -45,32 +45,42 @@
           </fieldset>
           <fieldset class="distribution-control group-b">
             <legend><span class="group-dot">B</span> 分布 B</legend>
-            <label for="kind-b">分布の形</label><select id="kind-b"><option value="normal">切断正規分布</option><option value="uniform">一様分布</option></select>
+            <div class="distribution-kind"><label for="kind-b">分布の形</label><select id="kind-b"><option value="normal">切断正規分布</option><option value="uniform">一様分布</option></select></div>
             <div class="normal-params" id="normal-b">
               <label for="mu-b">切断前の平均 <span class="math">μ</span> <output id="mu-b-value">8.0</output></label><input id="mu-b" type="range" min="0" max="10" step="0.1" value="8">
               <label for="sd-b">切断前の標準偏差 <i>s</i> <output id="sd-b-value">3.0</output></label><input id="sd-b" type="range" min="0.5" max="6" step="0.1" value="3">
             </div>
             <div class="presets"><button type="button" data-group="b" data-mu="2">短時間</button><button type="button" data-group="b" data-mu="5">中央</button><button type="button" data-group="b" data-mu="8">長時間</button></div>
           </fieldset>
-          <p class="control-help">正規分布は0〜10時間に切断・再正規化します。<span class="math">μ</span> と <i>s</i> は切断前の値です。</p>
-          <fieldset class="shared-control"><legend>共通の設定</legend>
-            <label for="shape">平均曲線 <span class="math"><i>m</i>(<i>x</i>)</span></label><select id="shape"><option value="curve">曲線：60 + 6𝑥 − 0.3𝑥²</option><option value="line">直線：60 + 3𝑥</option></select>
-            <label for="n">各集団の標本サイズ <i>n</i></label><input id="n" type="number" min="20" max="2000" step="1" value="300" required>
-            <label for="sigma">得点のばらつき <span class="math">σ</span> <output id="sigma-value">5.0</output></label><input id="sigma" type="range" min="0" max="15" step="0.5" value="5">
-            <label for="seed">乱数シード</label><input id="seed" type="number" min="1" max="1000000000" step="1" value="20261013" required>
-          </fieldset>
-          <button id="resample" type="button" class="primary" disabled>標本を取り直す <span aria-hidden="true">↻</span></button>
-          <p class="control-help">標本を取り直すとシードを更新します。その他の設定変更では，同じシードから再計算します。</p>
+          <p class="control-help distribution-note">正規分布は0〜10時間に切断・再正規化します。<span class="math">μ</span> と <i>s</i> は切断前の値です。</p>
+          <details class="shared-settings" id="shared-settings" open>
+            <summary>共通の設定</summary>
+            <fieldset class="shared-control"><legend>共通の設定</legend>
+              <label for="shape">平均曲線 <span class="math"><i>m</i>(<i>x</i>)</span></label><select id="shape" form="settings"><option value="curve">曲線：60 + 6𝑥 − 0.3𝑥²</option><option value="line">直線：60 + 3𝑥</option></select>
+              <label for="n">各集団の標本サイズ <i>n</i></label><input id="n" form="settings" type="number" min="20" max="2000" step="1" value="300" required>
+              <label for="sigma">得点のばらつき <span class="math">σ</span> <output id="sigma-value">5.0</output></label><input id="sigma" form="settings" type="range" min="0" max="15" step="0.5" value="5">
+              <label for="seed">乱数シード</label><input id="seed" form="settings" type="number" min="1" max="1000000000" step="1" value="20261013" required>
+            </fieldset>
+          </details>
+          <div class="sample-actions" id="sample-actions">
+            <button id="resample" type="button" class="primary" disabled>標本を取り直す <span aria-hidden="true">↻</span></button>
+            <p class="control-help">標本を取り直すとシードを更新します。その他の設定変更では，同じシードから再計算します。</p>
+          </div>
         </form>
       </aside>
       <div class="results">
         <section class="section" aria-labelledby="scatter-heading">
           <div class="section-heading"><div><p class="eyebrow">01 / DISTRIBUTION & SAMPLE</p><h2 id="scatter-heading">分布と散布図を比べる</h2></div><p id="run-status" role="status">初回の読み込みには時間がかかります。</p></div>
+          <div class="mobile-group-switch" role="group" aria-label="表示する分布">
+            <button type="button" data-view-group="a" aria-pressed="true">分布 A</button><button type="button" data-view-group="b" aria-pressed="false">分布 B</button>
+          </div>
+          <div id="mobile-settings-slot" class="mobile-settings-slot"></div>
           <div class="display-controls" aria-label="グラフの表示"><label><input id="show-mean" type="checkbox" checked><span class="key mean"></span>平均曲線 <span class="math"><i>m</i>(<i>x</i>)</span></label><label><input id="show-pop" type="checkbox" checked><span class="key population"></span>母集団の線形射影</label><label><input id="show-ols" type="checkbox" checked><span class="key ols"></span>標本OLS</label></div>
           <div class="plots-pair">
             <article class="plot-card group-a"><div class="plot-title"><h3><span class="group-dot">A</span> 分布 A</h3><span id="description-a"><span class="math">μ = 2</span>，<span class="math"><i>s</i> = 3</span></span></div><div id="scatter-a" class="chart scatter" aria-live="off"><div class="placeholder">WebRの準備ができると，散布図を表示します。</div></div><div class="density-title"><span>補習時間の密度 <span class="math"><i>f</i><sub>A</sub>(<i>x</i>)</span></span><span id="probability-a">6〜10時間：—</span></div><div id="density-a" class="chart density"></div><div class="slope-summary"><div>母集団の傾き <span class="math">β<sub>1,A</sub></span><strong id="pop-slope-a">—</strong></div><div>標本OLSの傾き <span class="math"><i>b</i><sub>1,A</sub></span><strong id="sample-slope-a">—</strong></div></div></article>
             <article class="plot-card group-b"><div class="plot-title"><h3><span class="group-dot">B</span> 分布 B</h3><span id="description-b"><span class="math">μ = 8</span>，<span class="math"><i>s</i> = 3</span></span></div><div id="scatter-b" class="chart scatter" aria-live="off"><div class="placeholder">WebRの準備ができると，散布図を表示します。</div></div><div class="density-title"><span>補習時間の密度 <span class="math"><i>f</i><sub>B</sub>(<i>x</i>)</span></span><span id="probability-b">6〜10時間：—</span></div><div id="density-b" class="chart density"></div><div class="slope-summary"><div>母集団の傾き <span class="math">β<sub>1,B</sub></span><strong id="pop-slope-b">—</strong></div><div>標本OLSの傾き <span class="math"><i>b</i><sub>1,B</sub></span><strong id="sample-slope-b">—</strong></div></div></article>
           </div>
+          <div id="mobile-secondary-settings" class="mobile-secondary-settings controls"></div>
           <div class="sample-playback"><button id="play" class="secondary" disabled>観測を順に表示</button><button id="show-all" class="text-button" disabled>全観測へ</button><label for="visible-n">表示する観測数 <output id="visible-n-value">300 / 300</output></label><input id="visible-n" aria-label="表示する観測数" type="range" min="5" max="300" value="300" disabled></div>
           <p class="caption">各点は1人の仮想観測です。破線のOLSは選択した観測数で推定します。母集団の線形射影は，指定した分布から数値積分で求めます。横軸は0〜10時間，縦軸は条件付き期待値の範囲を基準に固定します。縦軸の表示範囲外の観測もOLSに含めます。</p>
           <div class="table-wrap"><table><caption>直線の係数と補習時間の平均</caption><thead><tr><th scope="col">比較する量</th><th scope="col" class="a-text">分布 A</th><th scope="col" class="b-text">分布 B</th></tr></thead><tbody id="coefficient-table"><tr><th scope="row">母集団の切片 <span class="math">β<sub>0</sub></span></th><td>—</td><td>—</td></tr></tbody></table></div>
@@ -79,12 +89,15 @@
           <div class="section-heading"><div><p class="eyebrow">02 / REPEATED SAMPLING</p><h2 id="repeated-heading">標本を取り直すと，傾きはどう動くか</h2></div></div>
           <p>現在の分布と標本サイズで，観測の生成とOLSの推定を繰り返します。1回の推定から得られる傾き1つを，ヒストグラムに集計します。</p>
           <div class="repeat-toolbar"><label for="repetitions">繰り返し回数</label><select id="repetitions"><option value="200">200回</option><option value="500" selected>500回</option><option value="1000">1,000回</option><option value="2000">2,000回</option></select><button id="run-repeat" class="primary" disabled>繰り返し実験を実行</button><span id="repeat-status" role="status"></span></div>
-          <div id="repeat-result" hidden><div class="plots-pair"><div><h3 class="a-text">分布 A からの標本</h3><div id="hist-a" class="chart histogram"></div></div><div><h3 class="b-text">分布 B からの標本</h3><div id="hist-b" class="chart histogram"></div></div></div><p class="caption">縦線は各分布の母集団の傾きです。横軸と度数の目盛りは左右共通です。</p><div class="table-wrap"><table><caption>繰り返し実験の結果</caption><thead><tr><th scope="col">比較する量</th><th scope="col">分布 A</th><th scope="col">分布 B</th></tr></thead><tbody id="repeat-table"></tbody></table></div></div>
+          <div id="repeat-result" hidden>
+            <div class="mobile-group-switch" role="group" aria-label="ヒストグラムを表示する分布">
+              <button type="button" data-view-group="a" aria-pressed="true">分布 A</button><button type="button" data-view-group="b" aria-pressed="false">分布 B</button>
+            </div>
+            <div class="plots-pair"><div class="repeat-plot group-a"><h3 class="a-text">分布 A からの標本</h3><div id="hist-a" class="chart histogram"></div></div><div class="repeat-plot group-b"><h3 class="b-text">分布 B からの標本</h3><div id="hist-b" class="chart histogram"></div></div></div><p class="caption">縦線は各分布の母集団の傾きです。横軸と度数の目盛りは両分布で共通です。</p><div class="table-wrap"><table><caption>繰り返し実験の結果</caption><thead><tr><th scope="col">比較する量</th><th scope="col">分布 A</th><th scope="col">分布 B</th></tr></thead><tbody id="repeat-table"></tbody></table></div></div>
           <div id="repeat-empty" class="empty-state"><span aria-hidden="true">↗</span><p>実行すると，2つの分布から得られる<br>OLSの傾きのヒストグラムを表示します。</p></div>
         </section>
         <section class="section method-section" aria-labelledby="method-heading">
           <h2 id="method-heading">計算とデータ</h2>
-          <details><summary>モデルと計算方法を見る</summary><div class="detail-body"><p>各集団では <i>X</i> を指定した分布から独立に抽出し，<i>X</i> と独立な誤差 <span class="math"><i>U</i> ∼ N(0, σ<sup>2</sup>)</span> を加えて <span class="math"><i>Y</i> = <i>m</i>(<i>X</i>) + <i>U</i></span> を生成します。得点は連続値として扱います。平均曲線と誤差分布は両集団に共通です。</p><p>母集団の係数は <span class="math">β<sub>1</sub> = Cov(<i>X</i>, <i>m</i>(<i>X</i>)) / Var(<i>X</i>)</span>，<span class="math">β<sub>0</sub> = E[<i>m</i>(<i>X</i>)] − β<sub>1</sub>E[<i>X</i>]</span> から求めます。期待値はRの <code>integrate()</code> で計算し，標本OLSは <code>lm()</code> で求めます。順次表示では，同じ標本の先頭から表示中の観測までを使ってOLSを更新します。</p><p>分布Aには指定シード，Bには指定シード＋1を使います。繰り返し実験には，それぞれ指定シード＋100，＋101を使います。設定変更後に同じシードで再計算すると，各集団で同じ基礎乱数を使います。</p><p>初期設定は <cite>lecture02_weighting_empirical</cite> 第2節に対応します。初期設定の母集団の傾きは A が約3.6656，B が約2.3344です。直線の平均関数 <span class="math"><i>m</i>(<i>x</i>) = 60 + 3<i>x</i></span> を選ぶと，どちらの分布でも母集団の傾きは3になります。</p></div></details>
           <div class="download-row"><button id="download-r" class="secondary" disabled>現在の設定のRコードを保存</button><a href="./model.R" download>計算本体 model.R</a></div>
           <p class="caption">Rコードには表示中の観測数と繰り返し回数も記録します。計算には <a href="https://docs.r-wasm.org/webr/latest/" target="_blank" rel="noreferrer">WebR</a> 0.6.0を使います。読み込みにはインターネット接続が必要です。</p>
         </section>
